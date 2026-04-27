@@ -646,6 +646,15 @@ if [ "${#PACKAGE_VERSIONS[@]}" -gt 0 ] && [ "${PACKAGE_VERSIONS[0]}" != "<SKIP>"
 fi
 capture_benchmark "${SCRIPT_NAME}_install_artifact_streaming"
 
+# Skip all containerd/ctr-dependent prefetch and image-cache work when building
+# images that do not pre-pull container images at build time (e.g. COSI builds
+# for ACL/OSGuard, where image-fetcher pulls images at first boot instead).
+# When IMAGE_FETCH_ONLY=true is set, containerd is not running in this build
+# environment, so any `ctr` invocation would block on the containerd socket.
+if [ "${IMAGE_FETCH_ONLY:-false}" = "true" ]; then
+  echo "IMAGE_FETCH_ONLY=true: skipping containerd-dependent image prefetch and CoreDNS extraction"
+else
+
 # k8s will use images in the k8s.io namespaces - create it
 ctr namespace create k8s.io
 cliTool="ctr"
@@ -1109,6 +1118,8 @@ extractAndCacheCoreDnsBinary() {
 }
 
 extractAndCacheCoreDnsBinary
+
+fi  # end IMAGE_FETCH_ONLY guard
 
 rm -f ./azcopy # cleanup immediately after usage will return in two downloads
 echo "install-dependencies step completed successfully"

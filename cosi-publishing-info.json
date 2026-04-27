@@ -1,0 +1,11 @@
+{
+    "artifact_path": "/home/adamsanaglo/AgentBaker/out/cosi-acl/cosi-acl.cosi",
+    "sha256": "f15042dd5e98b431dfe6ac0fc760e0b6e09811a149caed66c57eb26329b0d900",
+    "size_bytes": 1852391424,
+    "image_version": "202604.26.2",
+    "os_name": "Linux",
+    "sku_name": "acl-tl-gen2",
+    "offer_name": "AzureContainerLinux",
+    "image_architecture": "X86_64",
+    "config": "cosi-acl"
+}
